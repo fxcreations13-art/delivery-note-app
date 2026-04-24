@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Delivery Note App</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+  <header>
+    <h1>📦 Delivery Note</h1>
+    <div class="header-actions">
+      <button id="viewSavedBtn">📋 Saved Notes</button>
+      <button id="exportAllBtn">💾 Export All</button>
+      <input type="file" id="importFile" accept=".json" hidden>
+      <button id="importBtn">📥 Import</button>
+    </div>
+  </header>
+
+  <main class="note-form">
+    <section class="details">
+      <label>Customer / Company</label>
+      <input type="text" id="customer" placeholder="Name or company">
+      
+      <div class="row">
+        <div class="col">
+          <label>Date</label>
+          <input type="date" id="date">
+        </div>
+        <div class="col">
+          <label>Reference</label>
+          <input type="text" id="reference" placeholder="INV-001">
+        </div>
+      </div>
+
+      <label>Delivery Address</label>
+      <textarea id="address" rows="2" placeholder="Full address"></textarea>
+    </section>
+
+    <section class="items">
+      <h3>Items</h3>
+      <table id="itemsTable">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th class="remove-col"></th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody"></tbody>
+      </table>
+      <button id="addItemBtn" class="secondary">➕ Add Item</button>
+    </section>
+
+    <div class="actions">
+      <button id="saveBtn">💾 Save Note</button>
+      <button id="printBtn" class="secondary">🖨️ Print / PDF</button>
+      <button id="clearBtn" class="danger">🗑️ Clear</button>
+    </div>
+  </main>
+
+  <dialog id="savedDialog">
+    <h3>Saved Delivery Notes</h3>
+    <ul id="savedList"></ul>
+    <button id="closeDialog">Close</button>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
