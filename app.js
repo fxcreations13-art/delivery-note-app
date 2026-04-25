@@ -3,25 +3,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedList = document.getElementById('savedList');
   const savedDialog = document.getElementById('savedDialog');
 
-  // Set today's date by default
   document.getElementById('date').valueAsDate = new Date();
 
-  // Add item row
   document.getElementById('addItemBtn').addEventListener('click', addItemRow);
   function addItemRow() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><input type="text" class="item-name" placeholder="Product / Description"></td>
-      <td><input type="number" class="item-qty" value="1" min="1"></td>
+      <td><input type="text" class="item-name" placeholder="Product"></td>
+      <td><input type="text" class="item-size" placeholder="S, M, L, XL"></td>
+      <td><input type="number" class="item-qty" value="1" min="0"></td>
+      <td><input type="text" class="item-details" placeholder="Color, notes, etc."></td>
       <td class="remove-col"><button class="remove-btn">✕</button></td>
     `;
     tr.querySelector('.remove-btn').onclick = () => tr.remove();
     itemsBody.appendChild(tr);
     tr.querySelector('.item-name').focus();
   }
-  addItemRow(); // Start with one row
+  addItemRow();
 
-  // Save note
   document.getElementById('saveBtn').addEventListener('click', () => {
     const note = getNoteData();
     const notes = JSON.parse(localStorage.getItem('deliveryNotes') || '[]');
@@ -31,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
     alert('✅ Delivery note saved!');
   });
 
-  // Load saved notes
   document.getElementById('viewSavedBtn').addEventListener('click', loadSavedNotes);
   function loadSavedNotes() {
     const notes = JSON.parse(localStorage.getItem('deliveryNotes') || '[]');
@@ -49,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('closeDialog').onclick = () => savedDialog.close();
 
-  // Fill form from saved note
   function fillForm(n) {
     document.getElementById('customer').value = n.customer || '';
     document.getElementById('date').value = n.date || '';
@@ -59,8 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
     n.items.forEach(i => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><input type="text" class="item-name" value="${i.name}"></td>
-        <td><input type="number" class="item-qty" value="${i.qty}" min="1"></td>
+        <td><input type="text" class="item-name" value="${i.name || ''}"></td>
+        <td><input type="text" class="item-size" value="${i.size || ''}"></td>
+        <td><input type="number" class="item-qty" value="${i.qty || 0}" min="0"></td>
+        <td><input type="text" class="item-details" value="${i.details || ''}"></td>
         <td class="remove-col"><button class="remove-btn">✕</button></td>
       `;
       tr.querySelector('.remove-btn').onclick = () => tr.remove();
@@ -69,10 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
     savedDialog.close();
   }
 
-  // Print / Export PDF
   document.getElementById('printBtn').addEventListener('click', () => window.print());
 
-  // Clear form
   document.getElementById('clearBtn').addEventListener('click', () => {
     document.getElementById('customer').value = '';
     document.getElementById('reference').value = '';
@@ -82,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     addItemRow();
   });
 
-  // Export/Import JSON
   document.getElementById('exportAllBtn').addEventListener('click', exportNotes);
   document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
   document.getElementById('importFile').addEventListener('change', importNotes);
@@ -90,9 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function getNoteData() {
     const rows = itemsBody.querySelectorAll('tr');
     const items = Array.from(rows).map(tr => ({
-      name: tr.querySelector('.item-name').value,
-      qty: parseInt(tr.querySelector('.item-qty').value) || 0
-    })).filter(i => i.name);
+      name: tr.querySelector('.item-name').value.trim(),
+      size: tr.querySelector('.item-size').value.trim(),
+      qty: parseInt(tr.querySelector('.item-qty').value) || 0,
+      details: tr.querySelector('.item-details').value.trim()
+    })).filter(i => (i.name + i.size + i.details).trim() !== '' || i.qty > 0);
 
     return {
       customer: document.getElementById('customer').value.trim(),
@@ -129,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
     e.target.value = '';
   }
 
-  // Register Service Worker for offline/PWA
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
   }
