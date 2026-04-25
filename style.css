@@ -32,8 +32,11 @@ input, textarea, select {
   width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem;
 }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+
+.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
 th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+.items input { font-size: 0.9rem; padding: 0.5rem; }
 .remove-col { width: 40px; }
 .remove-btn { background: var(--danger); color: white; border: none; padding: 0.3rem 0.5rem; border-radius: 6px; cursor: pointer; }
 
@@ -57,8 +60,13 @@ dialog li .meta { font-size: 0.8rem; color: var(--secondary); }
 
 @media print {
   body { background: white; padding: 0; }
-  header, .actions, .header-actions, button.secondary, button.danger, dialog { display: none !important; }
+  header, .actions, .header-actions, button.secondary, button.danger, dialog, .remove-btn, #addItemBtn { display: none !important; }
   .note-form { box-shadow: none; padding: 0; }
-  .remove-btn { display: none; }
-  #addItemBtn { display: none; }
+  .items input { border: none; background: transparent; padding: 0; }
+  .table-wrapper { overflow: visible; }
+}
+
+@media (max-width: 600px) {
+  th, td { font-size: 0.85rem; padding: 0.4rem; }
+  .items input { font-size: 0.85rem; padding: 0.4rem; }
 }
